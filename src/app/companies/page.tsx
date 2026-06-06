@@ -23,7 +23,7 @@ const industryColors: Record<string, "indigo" | "green" | "amber" | "red" | "gra
 
 export default async function CompaniesPage() {
     const companies = await getCompanies();
-    const industries = [...new Set(companies.map((c) => c.industry).filter(Boolean))];
+    const industries = Array.from(new Set(companies.map((c) => c.industry).filter(Boolean))) as string[];
 
     return (
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">

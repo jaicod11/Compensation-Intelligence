@@ -1,0 +1,54 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Company {
+  id        String   @id @default(cuid())
+  name      String   @unique
+  slug      String   @unique
+  industry  String?
+  hqCity    String?
+  hqCountry String?
+  logoUrl   String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  salaries SalaryEntry[]
+
+  @@index([slug])
+  @@index([industry])
+}
+
+model SalaryEntry {
+  id              String   @id @default(cuid())
+  companyId       String
+  company         Company  @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  jobTitle        String
+  role            String
+  roleSlug        String
+  level           String
+  levelOrder      Int
+  levelTrack      String
+  yearsExperience Int?
+  location        String
+  country         String   @default("India")
+  currency        String   @default("INR")
+  baseSalary      Float
+  bonus           Float    @default(0)
+  stockAnnual     Float    @default(0)
+  totalComp       Float
+  reportedAt      DateTime @default(now())
+  isVerified      Boolean  @default(false)
+
+  @@index([companyId])
+  @@index([role, level])
+  @@index([location])
+  @@index([totalComp])
+  @@index([levelOrder])
+  @@index([roleSlug])
+}
